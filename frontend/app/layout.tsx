@@ -15,15 +15,18 @@ const body = Figtree({
 
 export const metadata: Metadata = {
   title: "LinkBrief - AI Link Summarizer",
-  description: "LinkBrief is an AI-Powered link summarizer that helps you to quickly analyze page content.",
+  description:
+    "LinkBrief is an AI-Powered link summarizer that helps you to quickly analyze page content.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="en"
-    >
-      <body className={`${display.variable} ${body.variable} h-full antialiased`}>{children}</body>
+    <html lang="en">
+      <body
+        className={`${display.variable} ${body.variable} h-full antialiased`}
+      >
+        {children}
+      </body>
     </html>
   );
 }

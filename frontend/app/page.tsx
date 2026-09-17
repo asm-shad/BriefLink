@@ -9,8 +9,8 @@ export default function Home() {
         {/* Navigation */}
         <nav className="animate-fade-up flex items-center justify-between py-5">
           <div className="flex items-center gap-2.5">
-            <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              LB
+            <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-sm font-semibold text-primary-foreground">
+              Lb
             </span>
 
             <span className="text-sm font-semibold tracking-tight text-foreground">
@@ -33,9 +33,9 @@ export default function Home() {
         <div className="flex flex-1 flex-col py-10 sm:py-14">
           {/* Header */}
           <header className="animate-fade-up mb-10 max-w-xl">
-            <p className="font-heading text-5xl tracking-tight text-foreground sm:text-6xl">
-              Linkbrief
-            </p>
+          <p className="font-heading text-5xl tracking-tight text-foreground sm:text-6xl">
+            Linkbrief
+          </p>
 
             <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
               Paste any page URL and get a clear, structured brief streamed
