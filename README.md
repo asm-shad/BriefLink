@@ -1,62 +1,104 @@
 # Linkbrief
 
-> **AI-powered URL summarizer that turns web pages into clear, structured briefs in seconds.**
+**AI-powered URL summarizer that turns web pages into clear, structured briefs in seconds.**
 
-Linkbrief lets you paste a public webpage URL and receive a concise, easy-to-read summary. The application scrapes the webpage, extracts useful text, sends it to a Groq-powered LLM, and streams the generated summary to the browser in real time.
+Linkbrief is a full-stack Next.js application that lets users paste a public webpage URL and receive an AI-generated summary streamed live as it is being written.
+
+🔗 **Live Demo:** https://brief-link-nine.vercel.app/
 
 ---
 
 ## ✨ Features
 
-* 🔗 **URL-based summarization**
-* 🤖 **AI-powered summaries using Groq**
-* ⚡ **Real-time streaming responses**
-* 📝 **Markdown-formatted summaries**
-* 🌐 **Webpage scraping with Cheerio**
-* 🔍 **Automatic extraction of page title and content**
-* 🔗 **Extraction of links from webpages**
-* 🎨 **Clean and responsive UI**
-* 🧩 **Reusable React components**
-* 🔐 **Environment-based API key configuration**
-* 🚀 **Next.js App Router API endpoint**
+* 🔗 Summarize any public webpage using its URL
+* 🤖 AI-powered summaries using Groq
+* ⚡ Real-time streaming responses
+* 📝 Markdown-formatted summaries
+* 🎨 Clean and responsive UI
+* 🔍 Extracts webpage content using Cheerio
+* 🛡️ Keeps the Groq API key on the server
+* ☁️ Deployed with Vercel
+* 📱 Responsive design for desktop and mobile
 
 ---
 
-## 🖼️ How It Works
+## 🖥️ Live Demo
+
+Try Linkbrief here:
+
+**https://brief-link-nine.vercel.app/**
+
+The application allows you to:
+
+1. Paste a webpage URL.
+2. Click **Generate brief**.
+3. Linkbrief fetches and extracts the webpage content.
+4. The content is sent to the Groq AI model.
+5. The generated summary is streamed back to the browser.
+
+---
+
+## 🏗️ Architecture
+
+Linkbrief is built as a **Next.js full-stack application**.
+
+There is **no separate Express or Node.js backend**.
 
 ```text
-User enters URL
-       │
-       ▼
-Next.js Frontend
-       │
-       ▼
-POST /api/summarize
-       │
-       ▼
-Validate URL
-       │
-       ▼
-Fetch webpage HTML
-       │
-       ▼
-Cheerio extracts page content
-       │
-       ▼
-Build AI summary prompt
-       │
-       ▼
-Groq LLM
-       │
-       ▼
-Stream response
-       │
-       ▼
-React frontend
-       │
-       ▼
-Live Markdown summary
+┌─────────────────────────┐
+│       Browser           │
+│                         │
+│   UrlSummarizer.tsx     │
+└────────────┬────────────┘
+             │
+             │ POST /api/summarize
+             ▼
+┌─────────────────────────┐
+│    Next.js Server       │
+│                         │
+│ app/api/summarize/      │
+│ route.ts                │
+└────────────┬────────────┘
+             │
+       ┌─────┴─────┐
+       ▼           ▼
+┌────────────┐ ┌────────────┐
+│  Scraper   │ │    Groq    │
+│  Cheerio   │ │     AI     │
+└────────────┘ └────────────┘
+       │           │
+       └─────┬─────┘
+             ▼
+       Streaming Response
+             │
+             ▼
+┌─────────────────────────┐
+│       Browser           │
+│                         │
+│  Rich Text Summary      │
+└─────────────────────────┘
 ```
+
+### Why no separate backend?
+
+Next.js provides server-side functionality through **Route Handlers**.
+
+The file:
+
+```text
+app/api/summarize/route.ts
+```
+
+acts as the backend API for the application.
+
+This allows the project to:
+
+* Keep API keys private
+* Scrape webpages server-side
+* Communicate securely with Groq
+* Stream AI responses
+* Avoid maintaining a separate Express server
+* Deploy the entire application as one project
 
 ---
 
@@ -64,29 +106,29 @@ Live Markdown summary
 
 ### Frontend
 
-* [Next.js](https://nextjs.org/)
-* [React](https://react.dev/)
-* [TypeScript](https://www.typescriptlang.org/)
-* [Tailwind CSS](https://tailwindcss.com/)
-* [shadcn/ui](https://ui.shadcn.com/)
-* [Lucide React](https://lucide.dev/)
-* [React Markdown](https://github.com/remarkjs/react-markdown)
+* **Next.js**
+* **React**
+* **TypeScript**
+* **Tailwind CSS**
+* **shadcn/ui**
+* **Lucide React**
+* **React Markdown**
 
-### Backend / API
+### Backend / Server-side
 
-* Next.js Route Handlers
-* Node.js
-* TypeScript
-* Groq SDK
-
-### Web Scraping
-
-* [Cheerio](https://cheerio.js.org/)
+* **Next.js Route Handlers**
+* **TypeScript**
+* **Cheerio**
+* **Groq SDK**
 
 ### AI
 
-* [Groq](https://groq.com/)
+* **Groq**
 * Model: `openai/gpt-oss-120b`
+
+### Deployment
+
+* **Vercel**
 
 ---
 
@@ -120,68 +162,42 @@ linkbrief/
 │
 ├── lib/
 │   ├── groq.ts
-│   └── scrapper.ts
+│   └── scraper.ts
 │
 ├── public/
 │
 ├── .env.local
+├── .gitignore
 ├── package.json
 ├── tsconfig.json
 └── README.md
 ```
 
-> The exact structure may vary depending on additional files and shadcn/ui components in the project.
-
 ---
 
-## 🚀 Getting Started
+## 🔄 How It Works
 
-### 1. Clone the repository
+### 1. User enters a URL
 
-```bash
-git clone https://github.com/YOUR_USERNAME/linkbrief.git
-cd linkbrief
-```
+The user enters a public webpage URL in the Linkbrief interface.
 
-### 2. Install dependencies
-
-```bash
-npm install
-```
-
-### 3. Configure environment variables
-
-Create a `.env.local` file in the project root:
-
-```env
-GROQ_API_KEY=your_groq_api_key
-```
-
-You can obtain a Groq API key from the [Groq Console](https://console.groq.com/).
-
-> **Important:** Never commit your `.env.local` file or expose your API key in client-side code.
-
-### 4. Start the development server
-
-```bash
-npm run dev
-```
-
-The application will be available at:
+Example:
 
 ```text
-http://localhost:3000
+https://example.com/article
+```
+
+The frontend sends the URL to:
+
+```text
+POST /api/summarize
 ```
 
 ---
 
-## 🧠 How the Application Works
+### 2. URL validation
 
-### 1. User submits a URL
-
-The `UrlSummarizer` component accepts a URL from the user.
-
-Before sending the request, the URL is checked to make sure it uses either:
+The API checks that the URL uses either:
 
 ```text
 http://
@@ -193,89 +209,52 @@ or:
 https://
 ```
 
+Invalid URLs are rejected before processing.
+
 ---
 
-### 2. Frontend sends the request
+### 3. Webpage scraping
 
-The frontend sends a `POST` request to:
+The Next.js server downloads the webpage using `fetch()`.
+
+Cheerio is then used to parse the HTML.
+
+The scraper extracts:
+
+* Page title
+* Clean text content
+* Links
+* Original URL
+
+Unnecessary elements such as:
 
 ```text
-/api/summarize
+<script>
+<style>
+<noscript>
+<iframe>
+<svg>
 ```
 
-with:
-
-```json
-{
-  "url": "https://example.com/article"
-}
-```
+are removed before extracting the page text.
 
 ---
 
-### 3. API validates the URL
+### 4. Build the AI prompt
 
-The API route validates the URL before attempting to fetch the webpage.
+The extracted webpage content is passed to the prompt builder.
 
-Invalid URLs return:
+The prompt asks the AI to produce a clear Markdown summary with:
 
-```json
-{
-  "error": "Please provide a valid http or https URL."
-}
-```
-
-with HTTP status:
-
-```text
-400
-```
+* Section headings
+* Short bullet points
+* Easy-to-scan content
 
 ---
 
-### 4. Webpage is scraped
+### 5. Send content to Groq
 
-The scraper downloads the webpage HTML using `fetch()`.
-
-Cheerio then removes elements that normally don't contain useful text:
-
-```text
-script
-style
-noscript
-iframe
-svg
-```
-
-The remaining body text is cleaned and normalized.
-
-For example:
-
-```ts
-$("body")
-  .text()
-  .replace(/\s+/g, " ")
-  .trim();
-```
-
----
-
-### 5. AI prompt is created
-
-The extracted webpage information is passed to the prompt builder.
-
-The prompt instructs the model to:
-
-* Use Markdown
-* Use `##` for section headings
-* Use short bullet lists
-* Keep the summary easy to scan
-
-The scraped content is currently limited to the first **4,000 characters** before being sent to the model.
-
----
-
-### 6. Groq generates the summary
+The server creates a Groq client using the private API key.
 
 The application uses:
 
@@ -283,154 +262,163 @@ The application uses:
 openai/gpt-oss-120b
 ```
 
-through the Groq SDK.
-
-The response is requested as a stream:
-
-```ts
-stream: true
-```
+through the Groq API.
 
 ---
 
-### 7. Response is streamed to the browser
+### 6. Stream the response
 
-The Next.js API converts the Groq stream into a standard Web `ReadableStream`.
-
-The browser reads the stream chunk by chunk using:
-
-```ts
-response.body.getReader()
-```
-
-Each chunk is immediately appended to the existing summary.
-
-This allows the user to see the answer being generated instead of waiting for the complete response.
-
----
-
-## 🔄 Streaming Flow
+Instead of waiting for the complete AI response, Linkbrief streams the generated text back to the browser.
 
 ```text
-Groq
-  │
-  │ token/chunk
-  ▼
-Next.js API Route
-  │
-  │ ReadableStream
-  ▼
-Browser
-  │
-  │ chunk
-  ▼
-React State
-  │
-  ▼
-ReactMarkdown
-  │
-  ▼
-Live Summary
+AI starts generating
+        ↓
+First chunk arrives
+        ↓
+Browser displays it
+        ↓
+Next chunk arrives
+        ↓
+Browser appends it
+        ↓
+...
+        ↓
+Complete summary
+```
+
+This makes the application feel much faster and more interactive.
+
+---
+
+## 🔐 Environment Variables
+
+Create a `.env.local` file in the project root:
+
+```env
+GROQ_API_KEY=your_groq_api_key
+```
+
+### Important
+
+Never commit `.env.local` or your API key to GitHub.
+
+Make sure `.gitignore` contains:
+
+```gitignore
+.env*
+```
+
+For Vercel deployment, add the same environment variable through the Vercel project settings.
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/linkbrief.git
+```
+
+Then:
+
+```bash
+cd linkbrief
 ```
 
 ---
 
-## 📡 API
+### 2. Install dependencies
 
-### `POST /api/summarize`
+Using npm:
 
-Generate an AI summary from a public webpage.
-
-#### Request
-
-```http
-POST /api/summarize
-Content-Type: application/json
+```bash
+npm install
 ```
 
-```json
-{
-  "url": "https://example.com/article"
-}
-```
+---
 
-#### Successful Response
+### 3. Configure environment variables
 
-The endpoint returns a streaming text response:
+Create:
 
 ```text
-## Overview
-
-- Main point of the article
-- Important information
-- Key takeaway
-
-## Key Points
-
-- Point one
-- Point two
-- Point three
+.env.local
 ```
 
-#### Invalid URL
+Add:
 
-```http
-400 Bad Request
+```env
+GROQ_API_KEY=your_groq_api_key
 ```
 
-```json
-{
-  "error": "Please provide a valid http or https URL."
-}
+---
+
+### 4. Start the development server
+
+```bash
+npm run dev
 ```
 
-#### No Content Extracted
+Open:
 
-```http
-422 Unprocessable Entity
+```text
+http://localhost:3000
 ```
 
-```json
-{
-  "error": "Could not extract text from this page."
-}
-```
+---
 
-#### Server Error
+## 📦 Main Dependencies
 
-```http
-500 Internal Server Error
-```
+The project uses packages including:
 
-```json
-{
-  "error": "Failed to summarize page"
-}
+```text
+next
+react
+react-dom
+cheerio
+groq-sdk
+react-markdown
+lucide-react
+tailwindcss
 ```
 
 ---
 
 ## 🧩 Core Components
 
-### `UrlSummarizer`
+### `app/page.tsx`
 
-Responsible for:
+The main application page.
+
+It provides:
+
+* Navigation
+* Application title
+* Description
+* URL summarizer interface
+
+---
+
+### `components/UrlSummarizer.tsx`
+
+The main client-side component responsible for:
 
 * URL input
 * URL validation
-* API request
-* Streaming response handling
+* API requests
 * Loading state
 * Error handling
+* Streaming response handling
 * Summary display
 
 ---
 
-### `RichTextSummary`
+### `components/rich-text-summary.tsx`
 
-Uses `react-markdown` to render the AI response as formatted Markdown.
+Responsible for rendering the AI response as Markdown.
 
-Supported formatting includes:
+It supports:
 
 * Headings
 * Paragraphs
@@ -441,13 +429,37 @@ Supported formatting includes:
 
 ---
 
-### `scrapper.ts`
+### `app/api/summarize/route.ts`
 
-Responsible for webpage extraction.
+This is the server-side API endpoint.
 
-Main functions:
+It handles the complete summarization pipeline:
 
-```ts
+```text
+Receive URL
+    ↓
+Validate URL
+    ↓
+Scrape webpage
+    ↓
+Build prompt
+    ↓
+Call Groq
+    ↓
+Stream response
+    ↓
+Return to browser
+```
+
+---
+
+### `lib/scraper.ts`
+
+Responsible for extracting useful information from webpages using Cheerio.
+
+Main functions include:
+
+```text
 downloadHtml()
 getPageTitle()
 getCleanText()
@@ -455,167 +467,160 @@ extractLinks()
 scrapeWebpage()
 ```
 
-The main function returns:
-
-```ts
-type ScrapedPage = {
-  title: string;
-  content: string;
-  links: string[];
-  url: string;
-};
-```
-
 ---
 
-### `groq.ts`
+### `lib/groq.ts`
 
 Contains the Groq-related functionality.
 
-Main functions:
+It handles:
+
+* Groq client creation
+* API key retrieval
+* Prompt creation
+* AI streaming
+
+---
+
+## ⚡ Streaming Architecture
+
+Linkbrief uses streaming at two levels.
+
+### Server
+
+Groq generates the response incrementally:
+
+```text
+Groq
+ ↓
+AI chunk
+ ↓
+Next.js Route Handler
+```
+
+### Client
+
+The browser reads the response stream:
+
+```text
+Next.js
+ ↓
+ReadableStream
+ ↓
+Browser
+ ↓
+React state
+ ↓
+Rich text renderer
+```
+
+The summary therefore appears progressively instead of appearing only after the entire response has been generated.
+
+---
+
+## 🛡️ Security
+
+The Groq API key is accessed only from server-side code:
 
 ```ts
-createGroqClient()
-getGroqApiKey()
-buildLinkSummaryPrompt()
-streamAI()
+process.env.GROQ_API_KEY
 ```
 
-This keeps the AI configuration separate from the API route.
+It is never exposed directly to the browser.
 
----
+The frontend communicates with:
 
-## 🔐 Environment Variables
-
-The project requires:
-
-| Variable       | Required | Description                 |
-| -------------- | -------- | --------------------------- |
-| `GROQ_API_KEY` | Yes      | API key used to access Groq |
-
-Example:
-
-```env
-GROQ_API_KEY=your_groq_api_key
+```text
+/api/summarize
 ```
 
-Never use:
+instead of calling Groq directly.
 
-```env
-NEXT_PUBLIC_GROQ_API_KEY=...
-```
+### SSRF Consideration
 
-for the server API key.
+Because the application accepts arbitrary URLs and fetches them from the server, production deployments should consider **SSRF protection**.
 
----
+Possible improvements include:
 
-## 📦 Frontend Dependencies
+* Blocking private IP addresses
+* Blocking localhost URLs
+* Blocking internal network ranges
+* Restricting allowed protocols
+* Limiting response size
+* Adding request timeouts
+* Restricting redirects
+* Rate limiting requests
 
-Important frontend dependencies include:
-
-```json
-{
-  "next": "16.3.5",
-  "react": "19.2.8",
-  "react-dom": "19.2.8",
-  "cheerio": "^1.2.0",
-  "groq-sdk": "^1.6.0",
-  "react-markdown": "^10.1.0",
-  "lucide-react": "^1.46.0"
-}
-```
-
-Install dependencies with:
-
-```bash
-npm install
-```
-
----
-
-## 🧪 Development
-
-Run the development server:
-
-```bash
-npm run dev
-```
-
-Create a production build:
-
-```bash
-npm run build
-```
-
-Run the production server:
-
-```bash
-npm start
-```
+These protections become especially important if the application is exposed publicly at scale.
 
 ---
 
 ## ⚠️ Current Limitations
 
-The current implementation intentionally keeps the architecture simple. Some limitations include:
+Linkbrief currently focuses on public webpages.
 
-* Only publicly accessible webpages can be scraped.
-* Pages that require JavaScript rendering may not return their full content.
-* Some websites may block automated requests.
-* The extracted content is currently limited to 4,000 characters for summarization.
-* Very large or complex webpages may not produce complete summaries.
-* Authentication-protected pages are not supported.
-* The application does not currently maintain a summary history.
-* The scraper does not currently perform advanced content extraction or article detection.
+Some pages may not work correctly when:
+
+* Content requires JavaScript to render
+* The website blocks automated requests
+* The website requires authentication
+* The content is behind a paywall
+* The page has unusual HTML structure
+* The website blocks Vercel/server-side requests
+
+The quality of the summary also depends on the amount and quality of text extracted from the webpage.
 
 ---
 
 ## 🔮 Future Improvements
 
-Possible improvements include:
+Potential improvements include:
 
-* [ ] Better article/content extraction
-* [ ] Support for JavaScript-rendered websites
-* [ ] URL metadata extraction
-* [ ] Summary history
+* [ ] Better webpage content extraction
+* [ ] SSRF protection
+* [ ] Request rate limiting
+* [ ] URL history
+* [ ] User authentication
+* [ ] Database integration
+* [ ] Save summaries
 * [ ] Copy summary button
 * [ ] Download summary as Markdown/PDF
-* [ ] Multiple summary lengths
 * [ ] Multiple AI model options
-* [ ] Authentication
-* [ ] Database integration
-* [ ] Rate limiting
-* [ ] Request caching
-* [ ] Better error handling for blocked websites
-* [ ] Streaming cancellation
-* [ ] SEO and Open Graph metadata
-* [ ] Deployment configuration
+* [ ] Better handling of JavaScript-rendered websites
+* [ ] Improved prompt customization
+* [ ] Summary length controls
+* [ ] Browser extension
+* [ ] API access for external applications
 
 ---
 
-## 🛡️ Security Considerations
+## ☁️ Deployment
 
-Because the server fetches URLs provided by users, production deployments should consider **SSRF protection**.
+Linkbrief is deployed on **Vercel**.
 
-Potential protections include:
+Live application:
 
-* Blocking localhost addresses
-* Blocking private IP ranges
-* Blocking internal network addresses
-* Restricting unsupported protocols
-* Applying request timeouts
-* Limiting response size
-* Rate limiting API requests
+**https://brief-link-nine.vercel.app/**
 
-The current URL validation only verifies that the URL uses `http` or `https`; it is **not a complete SSRF protection mechanism**.
+Vercel handles the Next.js application deployment, including the server-side Route Handler used by the summarization API.
 
 ---
 
-## 📜 License
+## 🎯 Project Goal
 
-This project is currently distributed without a specified open-source license.
+The goal of Linkbrief is simple:
 
-If you intend to make the repository open source, consider adding an appropriate license such as MIT.
+> **Turn a long webpage into a useful brief without making the user read the entire page first.**
+
+It combines webpage scraping, server-side AI processing, and streaming responses into a simple URL-to-summary workflow.
+
+---
+
+## 📄 License
+
+This project is currently intended for learning and demonstration purposes.
+
+If you publish the repository, you can add a specific open-source license such as MIT depending on how you want others to use the code.
 
 ---
 
@@ -626,16 +631,12 @@ If you intend to make the repository open source, consider adding an appropriate
 Built with:
 
 * Next.js
-* React
 * TypeScript
-* Cheerio
 * Groq
+* Cheerio
+* React
 * Tailwind CSS
 
 ---
 
-## ⭐ Project Goal
-
-Linkbrief is designed to make web reading faster by turning long webpages into concise, structured briefs that can be read at a glance.
-
-> **Paste a link. Get the brief.**
+⭐ If you find Linkbrief useful, consider giving the repository a star.
