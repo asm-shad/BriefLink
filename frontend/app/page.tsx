@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { UrlSummarizer } from "@/components/UrlSummarizer";
 
 export default function Home() {
   return (
@@ -44,7 +45,7 @@ export default function Home() {
 
           {/* URL Summarizer */}
           <div className="animate-fade-up-delay">
-            {/* <UrlSummarizer /> */}
+            <UrlSummarizer />
           </div>
         </div>
       </div>
